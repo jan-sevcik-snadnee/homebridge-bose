@@ -1,0 +1,33 @@
+# Test files
+test/
+*.test.js
+test-*.js
+
+# Config files
+config.json
+.homebridge/
+
+# Development files
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+
+# Documentation source files
+docs/
+*.md
+!README.md
+!LICENSE
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.backup
+*.bak

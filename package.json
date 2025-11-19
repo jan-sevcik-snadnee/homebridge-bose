@@ -1,0 +1,36 @@
+{
+  "name": "homebridge-bose",
+  "version": "1.0.0",
+  "description": "Homebridge plugin for Bose speakers and soundbars (Home Speaker 300, 500, Soundbar series)",
+  "main": "index.js",
+  "keywords": [
+    "homebridge-plugin",
+    "bose",
+    "speaker",
+    "soundbar",
+    "home speaker 300",
+    "home speaker 500"
+  ],
+  "engines": {
+    "node": ">=14.0.0",
+    "homebridge": ">=1.3.0"
+  },
+  "author": {
+    "name": "Jan Sedivy",
+    "email": "jan.sedivy@email.cz"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jan-sevcik-snadnee/homebridge-bose.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jan-sevcik-snadnee/homebridge-bose/issues"
+  },
+  "homepage": "https://github.com/jan-sevcik-snadnee/homebridge-bose#readme",
+  "dependencies": {
+    "ws": "^8.14.2",
+    "axios": "^1.6.0",
+    "bonjour-service": "^1.1.1"
+  }
+}

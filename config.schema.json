@@ -1,0 +1,102 @@
+{
+  "pluginAlias": "BoseSpeaker",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Plugin Name",
+        "type": "string",
+        "default": "Bose Speakers",
+        "required": true
+      },
+      "email": {
+        "title": "Bose Account Email",
+        "type": "string",
+        "required": true,
+        "format": "email",
+        "description": "Your Bose account email address (required for authentication)"
+      },
+      "password": {
+        "title": "Bose Account Password",
+        "type": "string",
+        "required": true,
+        "description": "Your Bose account password"
+      },
+      "devices": {
+        "title": "Devices",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Device Name",
+              "type": "string",
+              "required": true,
+              "description": "Name for this speaker in HomeKit"
+            },
+            "ip": {
+              "title": "IP Address",
+              "type": "string",
+              "required": false,
+              "format": "ipv4",
+              "description": "IP address of the speaker (leave empty for auto-discovery)"
+            },
+            "guid": {
+              "title": "Device GUID",
+              "type": "string",
+              "required": false,
+              "description": "Device GUID (leave empty for auto-discovery)"
+            }
+          }
+        }
+      },
+      "autoDiscover": {
+        "title": "Auto-discover devices",
+        "type": "boolean",
+        "default": true,
+        "description": "Automatically discover Bose devices on the network"
+      },
+      "pollInterval": {
+        "title": "Status Poll Interval (seconds)",
+        "type": "integer",
+        "default": 10,
+        "minimum": 5,
+        "maximum": 60,
+        "description": "How often to poll device status (5-60 seconds)"
+      }
+    }
+  },
+  "layout": [
+    {
+      "type": "fieldset",
+      "title": "Bose Account",
+      "expandable": false,
+      "items": [
+        "email",
+        "password"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "Settings",
+      "expandable": true,
+      "items": [
+        "autoDiscover",
+        "pollInterval"
+      ]
+    },
+    {
+      "key": "devices",
+      "type": "array",
+      "title": "Manual Devices",
+      "description": "Manually add devices if auto-discovery doesn't work",
+      "items": [
+        "devices[].name",
+        "devices[].ip",
+        "devices[].guid"
+      ]
+    }
+  ]
+}
