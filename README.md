@@ -116,7 +116,7 @@ MIT
 
 ## Author
 
-Jan Sedivy
+Jan Sevcik
 
 ## Acknowledgments
 
