@@ -59,7 +59,7 @@ class BoseAuth {
 
   async _getIds() {
     try {
-      const response = await axios.post('https://socialize.us1.gigya.com/socialize.getSDKConfig', null, {
+      const response = await axios.get('https://socialize.us1.gigya.com/socialize.getSDKConfig', {
         params: {
           apikey: GIGYA_API_KEY,
           format: 'json',
