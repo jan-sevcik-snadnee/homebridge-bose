@@ -1,6 +1,6 @@
 {
   "name": "homebridge-bose",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Homebridge plugin for Bose speakers and soundbars (Home Speaker 300, 500, Soundbar series)",
   "main": "index.js",
   "keywords": [
