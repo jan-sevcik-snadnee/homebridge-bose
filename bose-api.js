@@ -60,21 +60,17 @@ class BoseAuth {
   async _getIds(retries = 3) {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        const response = await axios.get('https://socialize.us1.gigya.com/socialize.getSDKConfig', {
-          params: {
-            apikey: GIGYA_API_KEY,
-            format: 'json',
-            httpStatusCodes: 'false',
-            include: 'permissions,ids,appIds',
-            sdk: 'ios_swift_1.0.8',
-            targetEnv: 'mobile',
-            nonce: `${Date.now()}_${attempt}`
-          },
-          timeout: 10000,
-          headers: {
-            'Cache-Control': 'no-cache, no-store',
-            'Pragma': 'no-cache'
-          }
+        const url = `https://socialize.us1.gigya.com/socialize.getSDKConfig?apikey=${GIGYA_API_KEY}&format=json&httpStatusCodes=false&include=permissions%2Cids%2CappIds&sdk=ios_swift_1.0.8&targetEnv=mobile&_=${Date.now()}`;
+        const http = require('https');
+        const response = await new Promise((resolve, reject) => {
+          http.get(url, { headers: { 'User-Agent': GIGYA_UA } }, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+              try { resolve({ data: JSON.parse(data) }); }
+              catch (e) { reject(new Error(`Invalid JSON: ${data.substring(0, 100)}`)); }
+            });
+          }).on('error', reject);
         });
 
         if (response.data.errorCode && response.data.errorCode !== 0) {
