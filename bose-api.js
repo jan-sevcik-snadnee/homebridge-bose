@@ -57,28 +57,43 @@ class BoseAuth {
     }
   }
 
-  async _getIds() {
-    try {
-      const response = await axios.get('https://socialize.us1.gigya.com/socialize.getSDKConfig', {
-        params: {
-          apikey: GIGYA_API_KEY,
-          format: 'json',
-          httpStatusCodes: false,
-          include: 'permissions,ids,appIds',
-          sdk: 'ios_swift_1.0.8',
-          targetEnv: 'mobile'
-        }
-      });
+  async _getIds(retries = 3) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const response = await axios.get('https://socialize.us1.gigya.com/socialize.getSDKConfig', {
+          params: {
+            apikey: GIGYA_API_KEY,
+            format: 'json',
+            httpStatusCodes: 'false',
+            include: 'permissions,ids,appIds',
+            sdk: 'ios_swift_1.0.8',
+            targetEnv: 'mobile'
+          },
+          timeout: 10000
+        });
 
-      const ids = response.data.ids;
-      if (ids && ids.gmid && ids.ucid) {
-        this.log.debug('Got GMID and UCID');
-        return { gmid: ids.gmid, ucid: ids.ucid };
+        if (response.data.errorCode && response.data.errorCode !== 0) {
+          this.log.error(`Gigya API error (attempt ${attempt}/${retries}):`, response.data.errorMessage || JSON.stringify(response.data));
+          if (attempt < retries) continue;
+          return null;
+        }
+
+        const ids = response.data.ids;
+        if (ids && ids.gmid && ids.ucid) {
+          this.log.debug('Got GMID and UCID');
+          return { gmid: ids.gmid, ucid: ids.ucid };
+        }
+        this.log.error(`getSDKConfig response missing ids (attempt ${attempt}/${retries}):`, JSON.stringify(response.data).substring(0, 500));
+        if (attempt < retries) continue;
+        return null;
+      } catch (error) {
+        this.log.error(`Error getting IDs (attempt ${attempt}/${retries}):`, error.message);
+        if (error.response) {
+          this.log.error('Response status:', error.response.status, 'data:', JSON.stringify(error.response.data).substring(0, 200));
+        }
+        if (attempt < retries) continue;
+        return null;
       }
-      return null;
-    } catch (error) {
-      this.log.error('Error getting IDs:', error.message);
-      return null;
     }
   }
 
