@@ -67,9 +67,14 @@ class BoseAuth {
             httpStatusCodes: 'false',
             include: 'permissions,ids,appIds',
             sdk: 'ios_swift_1.0.8',
-            targetEnv: 'mobile'
+            targetEnv: 'mobile',
+            nonce: `${Date.now()}_${attempt}`
           },
-          timeout: 10000
+          timeout: 10000,
+          headers: {
+            'Cache-Control': 'no-cache, no-store',
+            'Pragma': 'no-cache'
+          }
         });
 
         if (response.data.errorCode && response.data.errorCode !== 0) {
