@@ -318,25 +318,31 @@ class BoseDiscovery {
       const devices = [];
       const bonjourInstance = new Bonjour();
 
-      const browser = bonjourInstance.find({ type: 'soundtouch' }, (service) => {
-        const device = {
-          name: service.name,
-          ip: service.host || service.addresses?.[0],
-          guid: service.txt?.MAC || service.txt?.deviceid,
-          port: service.port || 8082
-        };
+      const serviceTypes = ['bose-passport', 'soundtouch'];
+      let browsersRunning = serviceTypes.length;
 
-        if (device.ip && device.guid) {
-          this.log.info(`Discovered Bose device: ${device.name} (${device.ip})`);
-          devices.push(device);
-        }
+      serviceTypes.forEach(type => {
+        const browser = bonjourInstance.find({ type }, (service) => {
+          const ip = service.addresses?.find(a => a.includes('.')) || service.host;
+          const guid = service.txt?.GUID || service.txt?.MAC || service.txt?.deviceid;
+          const name = service.txt?.PNAME || service.name;
+          const port = service.port || 8090;
+
+          if (ip && guid && !devices.find(d => d.guid === guid)) {
+            this.log.info(`Discovered Bose device: ${name} (${ip}) via ${type}`);
+            devices.push({ name, ip, guid, port });
+          }
+        });
+
+        setTimeout(() => {
+          browser.stop();
+          browsersRunning--;
+          if (browsersRunning === 0) {
+            bonjourInstance.destroy();
+            resolve(devices);
+          }
+        }, timeout);
       });
-
-      setTimeout(() => {
-        browser.stop();
-        bonjourInstance.destroy();
-        resolve(devices);
-      }, timeout);
     });
   }
 }

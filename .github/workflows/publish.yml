@@ -17,6 +17,12 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - run: npm install
-      - run: npm publish --provenance --access public
+      - run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if echo "$VERSION" | grep -q "alpha\|beta\|rc"; then
+            npm publish --provenance --access public --tag alpha
+          else
+            npm publish --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
