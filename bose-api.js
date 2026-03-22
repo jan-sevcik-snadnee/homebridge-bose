@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const axios = require('axios');
-const bonjour = require('bonjour-service');
+const { Bonjour } = require('bonjour-service');
 const crypto = require('crypto');
 
 // Bose API konstanty (z pybose)
@@ -300,7 +300,7 @@ class BoseDiscovery {
   async discoverDevices(timeout = 5000) {
     return new Promise((resolve) => {
       const devices = [];
-      const bonjourInstance = bonjour();
+      const bonjourInstance = new Bonjour();
 
       const browser = bonjourInstance.find({ type: 'soundtouch' }, (service) => {
         const device = {
